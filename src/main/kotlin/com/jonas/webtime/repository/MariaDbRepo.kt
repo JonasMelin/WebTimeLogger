@@ -23,5 +23,7 @@ interface ProjectRepo : JpaRepository<Project?, Long?> {
 }
 
 @Repository
-interface TimeLogRepo : JpaRepository<TimeLog?, Long?>
+interface TimeLogRepo : JpaRepository<TimeLog?, Long?> {
+    fun findFirstByUserAndOngoing(user: User, ongoing: Boolean): TimeLog?
+}
 

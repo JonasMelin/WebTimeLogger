@@ -1,7 +1,7 @@
 package com.jonas.webtime.Models.DTO
 
 class UpdateLoggingDTO(var firstName: String, var lastName: String, var token: String,
-                       var projectName: String, var activityType: String, var timeoutMin: Int) {
+                       var projectName: String, var activityType: String, var timeoutMin: Long) {
 
     val MIN_LEN = 2
     val MAX_TIMEOUT_MIN = 120

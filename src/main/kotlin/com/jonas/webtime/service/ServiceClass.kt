@@ -9,7 +9,6 @@ import com.jonas.webtime.repository.ProjectRepo
 import com.jonas.webtime.repository.TimeLogRepo
 import com.jonas.webtime.repository.UserRepo
 import org.springframework.stereotype.Service
-import java.sql.Time
 
 @Service
 class ServiceClass (
@@ -34,8 +33,19 @@ class ServiceClass (
         this.activityDb.save(Activity(activityType, user))
     }
 
+    fun addProject(firstName: String, lastName: String, token: String, projectName: String) {
+
+        val user = this.userDb.findByFirstNameAndLastNameAndToken(firstName, lastName, token)
+
+        if (user == null) {
+            throw RuntimeException("User not found...")
+        }
+
+        this.projectDb.save(Project(projectName, user))
+    }
+
     fun uppdateLogging(firstName: String, lastName: String, token: String,
-                       projectName: String, activityType: String, timeout: Int) {
+                       projectName: String, activityType: String, timeoutMinutes: Long) {
 
         val user = this.userDb.findByFirstNameAndLastNameAndToken(firstName, lastName, token)
 
@@ -54,18 +64,38 @@ class ServiceClass (
             throw RuntimeException("Project not found ($project)...")
         }
 
-        this.timeLogRepo.save(TimeLog(Time(0L), null, Time(0L), true, user, activity, project))
+        this.stopOngoingRecordings(user)
+
+        this.timeLogRepo.save(
+            TimeLog(
+                System.currentTimeMillis(),
+                null,
+                System.currentTimeMillis() + timeoutMinutes * 1000 * 60,
+                0,
+                true,
+                user,
+                activity,
+                project))
     }
 
-    fun addProject(firstName: String, lastName: String, token: String, projectName: String) {
+    private fun stopOngoingRecordings(user: User) {
+        while(true) {
+            val ongoingTimeLog = this.timeLogRepo.findFirstByUserAndOngoing(user, true)
 
-        val user = this.userDb.findByFirstNameAndLastNameAndToken(firstName, lastName, token)
+            if (ongoingTimeLog == null) {
+                return
+            }
 
-        if (user == null) {
-            throw RuntimeException("User not found...")
+            ongoingTimeLog.ongoing = false
+            ongoingTimeLog.expireTimeMs = null
+            ongoingTimeLog.endTimeMs = System.currentTimeMillis()
+            ongoingTimeLog.loggedTimeMs = (ongoingTimeLog.endTimeMs!! - ongoingTimeLog.startTimeMs)
+            this.timeLogRepo.save(ongoingTimeLog)
         }
+    }
 
-        this.projectDb.save(Project(projectName, user))
+    private fun getTimesForLog() {
+
     }
 
     fun functionX() {
