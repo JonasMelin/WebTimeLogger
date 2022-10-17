@@ -6,19 +6,21 @@ import jakarta.persistence.*
 class Project {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val project_id : Long = 0
+    val id : Long = 0
 
     @Column(name = "project_name", nullable = false)
     var projectName: String = ""
 
-    //@ManyToMany(fetch = FetchType.EAGER)
-    //@JoinTable(name = "users", joinColumns = [JoinColumn(name = "user_id")])
-    @Column(name = "user_id", nullable = false)
-    var userId: Long = 0
+    @ManyToOne
+    var user: User = User()
+
+    @ManyToOne
+    var activity: Activity = Activity()
 
     constructor() {}
-    constructor(projectName: String, userId: Long) {
+    constructor(projectName: String, user: User, activity: Activity) {
         this.projectName = projectName
-        this.userId = userId
+        this.user = user
+        this.activity = activity
     }
 }

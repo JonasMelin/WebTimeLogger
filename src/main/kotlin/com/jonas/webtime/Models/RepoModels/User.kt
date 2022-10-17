@@ -14,7 +14,7 @@ import jakarta.persistence.*
 class User {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val user_id : Long = 0
+    val id : Long = 0
 
     @Column(name = "token", nullable = false)
     var token: String = ""
