@@ -1,5 +1,6 @@
 package com.jonas.webtime.controller
 
+import com.jonas.webtime.Models.DTO.ActivityDTO
 import com.jonas.webtime.Models.DTO.ProjectDTO
 import com.jonas.webtime.Models.DTO.UserDTO
 import com.jonas.webtime.service.ServiceClass
@@ -33,6 +34,17 @@ class HtmlController (private val serviceClass: ServiceClass) {
     fun addProject(@RequestBody projectDto: ProjectDTO): ResponseEntity<String> {
         try {
             this.serviceClass.addProject(projectDto.firstName, projectDto.lastName, projectDto.token, projectDto.projectName)
+            return ResponseEntity("", HttpStatus.OK)
+        }catch (ex: Exception) {
+            return ResponseEntity("Could not add project: " + ex.message, HttpStatus.BAD_REQUEST)
+        }
+    }
+
+    @PostMapping("/api/v1/add_activity")
+    fun addActivity(@RequestBody activityDTO: ActivityDTO): ResponseEntity<String> {
+        try {
+            this.serviceClass.addActivity(activityDTO.firstName, activityDTO.lastName,
+                activityDTO.token, activityDTO.activityType)
             return ResponseEntity("", HttpStatus.OK)
         }catch (ex: Exception) {
             return ResponseEntity("Could not add project: " + ex.message, HttpStatus.BAD_REQUEST)

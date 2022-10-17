@@ -14,13 +14,9 @@ class Project {
     @ManyToOne
     var user: User = User()
 
-    @ManyToOne
-    var activity: Activity = Activity()
-
     constructor() {}
-    constructor(projectName: String, user: User, activity: Activity) {
+    constructor(projectName: String, user: User) {
         this.projectName = projectName
         this.user = user
-        this.activity = activity
     }
 }

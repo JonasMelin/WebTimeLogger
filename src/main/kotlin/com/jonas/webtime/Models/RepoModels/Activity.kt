@@ -8,9 +8,6 @@ class Activity {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id : Long = 0
 
-    @Column(name = "activity_name", nullable = false)
-    var activityName: String = ""
-
     @Column(name = "activity_type", nullable = false)
     var activityType: String = ""
 
@@ -18,8 +15,7 @@ class Activity {
     var user: User = User()
 
     constructor() {}
-    constructor(activityName: String, activityType: String, user: User) {
-        this.activityName = activityName
+    constructor(activityType: String, user: User) {
         this.activityType = activityType
         this.user = user
     }

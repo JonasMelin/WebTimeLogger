@@ -2,6 +2,7 @@ package com.jonas.webtime.repository
 
 import com.jonas.webtime.Models.RepoModels.Activity
 import com.jonas.webtime.Models.RepoModels.Project
+import com.jonas.webtime.Models.RepoModels.TimeLog
 import com.jonas.webtime.Models.RepoModels.User
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
@@ -16,4 +17,7 @@ interface ActivityRepo : JpaRepository<Activity?, Long?>
 
 @Repository
 interface ProjectRepo : JpaRepository<Project?, Long?>
+
+@Repository
+interface TimeLogRepo : JpaRepository<TimeLog?, Long?>
 
