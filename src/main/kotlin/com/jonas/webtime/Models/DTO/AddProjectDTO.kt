@@ -1,6 +1,6 @@
 package com.jonas.webtime.Models.DTO
 
-class ProjectDTO(var firstName: String, var lastName: String, var token: String, var projectName: String) {
+class AddProjectDTO(var firstName: String, var lastName: String, var token: String, var projectName: String) {
 
     val MIN_LEN = 2
 

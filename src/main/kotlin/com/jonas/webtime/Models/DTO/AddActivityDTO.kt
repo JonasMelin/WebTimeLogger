@@ -1,6 +1,6 @@
 package com.jonas.webtime.Models.DTO
 
-class ActivityDTO(var firstName: String, var lastName: String, var token: String, var activityType: String) {
+class AddActivityDTO(var firstName: String, var lastName: String, var token: String, var activityType: String) {
 
     val MIN_LEN = 2
 
