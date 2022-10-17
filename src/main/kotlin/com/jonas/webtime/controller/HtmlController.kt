@@ -1,8 +1,8 @@
-package com.jonas.demo2.controller
+package com.jonas.webtime.controller
 
-import com.jonas.demo2.Models.DTO.ProjectDTO
-import com.jonas.demo2.Models.DTO.UserDTO
-import com.jonas.demo2.service.ServiceClass
+import com.jonas.webtime.Models.DTO.ProjectDTO
+import com.jonas.webtime.Models.DTO.UserDTO
+import com.jonas.webtime.service.ServiceClass
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.ui.Model

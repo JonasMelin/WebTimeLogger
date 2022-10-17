@@ -1,10 +1,10 @@
-package com.jonas.demo2
+package com.jonas.webtime
 
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.context.SpringBootTest
 
 @SpringBootTest
-class Demo2ApplicationTests {
+class WebTimeApplicationTests {
 
 	@Test
 	fun contextLoads() {

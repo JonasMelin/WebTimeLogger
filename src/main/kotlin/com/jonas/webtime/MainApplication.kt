@@ -1,11 +1,11 @@
-package com.jonas.demo2
+package com.jonas.webtime
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 
 @SpringBootApplication
-class Demo2Application
+class WebTimeApplication
 
 fun main(args: Array<String>) {
-	runApplication<Demo2Application>(*args)
+	runApplication<WebTimeApplication>(*args)
 }

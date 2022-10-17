@@ -1,4 +1,4 @@
-package com.jonas.demo2.Models.RepoModels
+package com.jonas.webtime.Models.RepoModels
 import jakarta.persistence.*
 
 @Entity

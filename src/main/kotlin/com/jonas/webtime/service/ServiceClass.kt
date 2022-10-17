@@ -1,9 +1,9 @@
-package com.jonas.demo2.service
+package com.jonas.webtime.service
 
-import com.jonas.demo2.Models.RepoModels.Project
-import com.jonas.demo2.Models.RepoModels.User
-import com.jonas.demo2.repository.ProjectRepo
-import com.jonas.demo2.repository.UserRepo
+import com.jonas.webtime.Models.RepoModels.Project
+import com.jonas.webtime.Models.RepoModels.User
+import com.jonas.webtime.repository.ProjectRepo
+import com.jonas.webtime.repository.UserRepo
 import org.springframework.stereotype.Service
 
 @Service

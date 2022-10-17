@@ -1,4 +1,4 @@
-package com.jonas.demo2.Models.DTO
+package com.jonas.webtime.Models.DTO
 
 data class UserDTO(var firstName: String, var lastName: String, var token: String) {
 

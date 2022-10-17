@@ -1,7 +1,7 @@
-package com.jonas.demo2.repository
+package com.jonas.webtime.repository
 
-import com.jonas.demo2.Models.RepoModels.Project
-import com.jonas.demo2.Models.RepoModels.User
+import com.jonas.webtime.Models.RepoModels.Project
+import com.jonas.webtime.Models.RepoModels.User
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 
