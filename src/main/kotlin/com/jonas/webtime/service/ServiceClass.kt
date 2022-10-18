@@ -23,46 +23,19 @@ class ServiceClass (
     }
 
     fun addActivity(firstName: String, lastName: String, token: String, activityType: String) {
-
-        val user = this.userDb.findByFirstNameAndLastNameAndToken(firstName, lastName, token)
-
-        if (user == null) {
-            throw RuntimeException("User not found...")
-        }
-
-        this.activityDb.save(Activity(activityType, user))
+        this.activityDb.save(Activity(activityType, this.getUser(firstName, lastName, token)))
     }
 
     fun addProject(firstName: String, lastName: String, token: String, projectName: String) {
-
-        val user = this.userDb.findByFirstNameAndLastNameAndToken(firstName, lastName, token)
-
-        if (user == null) {
-            throw RuntimeException("User not found...")
-        }
-
-        this.projectDb.save(Project(projectName, user))
+        this.projectDb.save(Project(projectName, this.getUser(firstName, lastName, token)))
     }
 
     fun uppdateLogging(firstName: String, lastName: String, token: String,
                        projectName: String, activityType: String, timeoutMinutes: Long) {
 
-        val user = this.userDb.findByFirstNameAndLastNameAndToken(firstName, lastName, token)
-
-        if (user == null) {
-            throw RuntimeException("User not found ($firstName $lastName / $token)...")
-        }
-
-        val activity = this.activityDb.findByActivityTypeAndUser(activityType, user)
-
-        if (activity == null) {
-            throw RuntimeException("Activity not found ($activityType)...")
-        }
-        val project = this.projectDb.findByProjectNameAndUser(projectName, user)
-
-        if (project == null) {
-            throw RuntimeException("Project not found ($projectName)...")
-        }
+        val user = this.getUser(firstName, lastName, token)
+        val activity = this.getActivity(activityType, user)
+        val project = this.getProject(projectName, user)
 
         this.stopOngoingRecording(user)
 
@@ -78,8 +51,45 @@ class ServiceClass (
                 project))
     }
 
+    fun getProjects(firstName: String, lastName: String, token: String): Set<Project> {
+
+        return this.projectDb.findByUser(this.getUser(firstName, lastName, token))
+    }
+
+    private fun getUser(firstName: String, lastName: String, token: String): User {
+        val user = this.userDb.findByFirstNameAndLastNameAndToken(firstName, lastName, token)
+
+        if (user == null) {
+            throw RuntimeException("User not found ($firstName $lastName / $token)...")
+        }
+
+        return user
+    }
+
+    private fun getActivity(activityType: String, user: User): Activity {
+        val activity = this.activityDb.findByActivityTypeAndUser(activityType, user)
+
+        if (activity == null) {
+            throw RuntimeException("Activity not found ($activityType)...")
+        }
+
+        return activity
+    }
+
+    private fun getProject(projectName: String, user: User): Project {
+        val project = this.projectDb.findByProjectNameAndUser(projectName, user)
+
+        if (project == null) {
+            throw RuntimeException("Project not found ($projectName)...")
+        }
+
+        return project
+    }
+
+
+
     private fun stopOngoingRecording(user: User) {
-        while(true) {
+        while(true) { // ToDo: Get a Set instead. But, should never happen as only one can be active...
             val ongoingTimeLog = this.timeLogRepo.findFirstByUserAndOngoing(user, true)
 
             if (ongoingTimeLog == null) { return }

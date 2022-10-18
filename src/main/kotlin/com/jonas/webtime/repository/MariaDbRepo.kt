@@ -20,6 +20,7 @@ interface ActivityRepo : JpaRepository<Activity?, Long?> {
 @Repository
 interface ProjectRepo : JpaRepository<Project?, Long?> {
     fun findByProjectNameAndUser(project_name: String, user: User): Project?
+    fun findByUser(user: User): Set<Project>
 }
 
 @Repository

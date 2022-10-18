@@ -1,9 +1,6 @@
 package com.jonas.webtime.controller
 
-import com.jonas.webtime.Models.DTO.AddActivityDTO
-import com.jonas.webtime.Models.DTO.AddProjectDTO
-import com.jonas.webtime.Models.DTO.UserBaseDTO
-import com.jonas.webtime.Models.DTO.UpdateLoggingDTO
+import com.jonas.webtime.Models.DTO.*
 import com.jonas.webtime.service.ServiceClass
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -42,12 +39,19 @@ class Controller (private val serviceClass: ServiceClass) {
     }
 
     @GetMapping("/api/v1/project")
-    fun getProject(@RequestBody projectDto: AddProjectDTO): ResponseEntity<String> {
+    fun getProject(@RequestBody userBaseDto: UserBaseDTO): ResponseEntity<GetProjectsDTO> {
         try {
-            this.serviceClass.addProject(projectDto.firstName, projectDto.lastName, projectDto.token, projectDto.projectName)
-            return ResponseEntity("", HttpStatus.OK)
+            val projects = this.serviceClass.getProjects(userBaseDto.firstName, userBaseDto.lastName, userBaseDto.token)
+            val projectsDto = GetProjectsDTO()
+
+            for(nextProj in projects) {
+                projectsDto.projects!!.add(nextProj.projectName)
+            }
+
+            return ResponseEntity(projectsDto, HttpStatus.OK)
         }catch (ex: Exception) {
-            return ResponseEntity("Could not add project: " + ex.message, HttpStatus.BAD_REQUEST)
+            return ResponseEntity(GetProjectsDTO(null, "Could not get projects: " + ex.message),
+                HttpStatus.BAD_REQUEST)
         }
     }
 
