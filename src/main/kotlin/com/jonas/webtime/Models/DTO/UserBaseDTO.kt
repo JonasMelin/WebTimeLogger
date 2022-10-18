@@ -1,6 +1,6 @@
 package com.jonas.webtime.Models.DTO
 
-data class AddUserDTO(var firstName: String, var lastName: String, var token: String) {
+open class UserBaseDTO(var firstName: String, var lastName: String, var token: String) {
 
     val MIN_LEN = 2
 

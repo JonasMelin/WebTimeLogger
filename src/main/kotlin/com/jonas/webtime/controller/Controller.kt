@@ -2,7 +2,7 @@ package com.jonas.webtime.controller
 
 import com.jonas.webtime.Models.DTO.AddActivityDTO
 import com.jonas.webtime.Models.DTO.AddProjectDTO
-import com.jonas.webtime.Models.DTO.AddUserDTO
+import com.jonas.webtime.Models.DTO.UserBaseDTO
 import com.jonas.webtime.Models.DTO.UpdateLoggingDTO
 import com.jonas.webtime.service.ServiceClass
 import org.springframework.http.HttpStatus
@@ -14,24 +14,24 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-class HtmlController (private val serviceClass: ServiceClass) {
+class Controller (private val serviceClass: ServiceClass) {
 
     @GetMapping("/")
     fun hello(model: Model): String {
         return "hello!"
     }
 
-    @PostMapping("/api/v1/add_user")
-    fun addUser(@RequestBody userDto: AddUserDTO): ResponseEntity<String> {
+    @PostMapping("/api/v1/user")
+    fun addUser(@RequestBody userBaseDto: UserBaseDTO): ResponseEntity<String> {
         try {
-            this.serviceClass.addUser(userDto.firstName, userDto.lastName, userDto.token)
+            this.serviceClass.addUser(userBaseDto.firstName, userBaseDto.lastName, userBaseDto.token)
             return ResponseEntity("", HttpStatus.OK)
         }catch (ex: Exception) {
             return ResponseEntity("Could not add user: " + ex.message, HttpStatus.BAD_REQUEST)
         }
     }
 
-    @PostMapping("/api/v1/add_project")
+    @PostMapping("/api/v1/project")
     fun addProject(@RequestBody projectDto: AddProjectDTO): ResponseEntity<String> {
         try {
             this.serviceClass.addProject(projectDto.firstName, projectDto.lastName, projectDto.token, projectDto.projectName)
@@ -41,7 +41,17 @@ class HtmlController (private val serviceClass: ServiceClass) {
         }
     }
 
-    @PostMapping("/api/v1/add_activity")
+    @GetMapping("/api/v1/project")
+    fun getProject(@RequestBody projectDto: AddProjectDTO): ResponseEntity<String> {
+        try {
+            this.serviceClass.addProject(projectDto.firstName, projectDto.lastName, projectDto.token, projectDto.projectName)
+            return ResponseEntity("", HttpStatus.OK)
+        }catch (ex: Exception) {
+            return ResponseEntity("Could not add project: " + ex.message, HttpStatus.BAD_REQUEST)
+        }
+    }
+
+    @PostMapping("/api/v1/activity")
     fun addActivity(@RequestBody activityDTO: AddActivityDTO): ResponseEntity<String> {
         try {
             this.serviceClass.addActivity(activityDTO.firstName, activityDTO.lastName,
@@ -52,7 +62,7 @@ class HtmlController (private val serviceClass: ServiceClass) {
         }
     }
 
-    @PostMapping("/api/v1/update_logging")
+    @PostMapping("/api/v1/logging")
     fun updateLogging(@RequestBody updateLoggingDTO: UpdateLoggingDTO): ResponseEntity<String> {
         try {
             this.serviceClass.uppdateLogging(updateLoggingDTO.firstName, updateLoggingDTO.lastName,

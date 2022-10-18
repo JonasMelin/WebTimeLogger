@@ -61,10 +61,10 @@ class ServiceClass (
         val project = this.projectDb.findByProjectNameAndUser(projectName, user)
 
         if (project == null) {
-            throw RuntimeException("Project not found ($project)...")
+            throw RuntimeException("Project not found ($projectName)...")
         }
 
-        this.stopOngoingRecordings(user)
+        this.stopOngoingRecording(user)
 
         this.timeLogRepo.save(
             TimeLog(
@@ -78,20 +78,29 @@ class ServiceClass (
                 project))
     }
 
-    private fun stopOngoingRecordings(user: User) {
+    private fun stopOngoingRecording(user: User) {
         while(true) {
             val ongoingTimeLog = this.timeLogRepo.findFirstByUserAndOngoing(user, true)
 
-            if (ongoingTimeLog == null) {
-                return
-            }
+            if (ongoingTimeLog == null) { return }
 
-            ongoingTimeLog.ongoing = false
-            ongoingTimeLog.expireTimeMs = null
-            ongoingTimeLog.endTimeMs = System.currentTimeMillis()
-            ongoingTimeLog.loggedTimeMs = (ongoingTimeLog.endTimeMs!! - ongoingTimeLog.startTimeMs)
-            this.timeLogRepo.save(ongoingTimeLog)
+            this.stopOngoingRecording(ongoingTimeLog)
         }
+    }
+
+    private fun stopOngoingRecording(timelog: TimeLog?) {
+
+        if (timelog == null || !timelog.ongoing) {
+            return
+        }
+
+        val currentTime = System.currentTimeMillis()
+
+        timelog.ongoing = false
+        timelog.endTimeMs = if ((timelog.expireTimeMs != null) && (timelog.expireTimeMs!! < currentTime)) timelog.expireTimeMs!! else currentTime
+        timelog.expireTimeMs = null
+        timelog.loggedTimeMs = (timelog.endTimeMs!! - timelog.startTimeMs)
+        this.timeLogRepo.save(timelog)
     }
 
     private fun getTimesForLog() {

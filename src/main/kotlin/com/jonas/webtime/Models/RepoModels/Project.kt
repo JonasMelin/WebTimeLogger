@@ -2,7 +2,16 @@ package com.jonas.webtime.Models.RepoModels
 import jakarta.persistence.*
 
 @Entity
-@Table(name = "projects")
+@Table(
+    name = "projects",
+    uniqueConstraints = [
+        (
+                UniqueConstraint(
+                    name="nameUserId",
+                    columnNames = ["project_name", "user_id"]
+                ))
+    ]
+)
 class Project {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
