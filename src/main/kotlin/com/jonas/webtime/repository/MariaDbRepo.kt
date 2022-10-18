@@ -15,6 +15,7 @@ interface UserRepo : JpaRepository<User?, Long?> {
 @Repository
 interface ActivityRepo : JpaRepository<Activity?, Long?> {
     fun findByActivityTypeAndUser(activity_type: String, user: User): Activity?
+    fun findByUser(user: User): Set<Activity>
 }
 
 @Repository
@@ -26,5 +27,7 @@ interface ProjectRepo : JpaRepository<Project?, Long?> {
 @Repository
 interface TimeLogRepo : JpaRepository<TimeLog?, Long?> {
     fun findFirstByUserAndOngoing(user: User, ongoing: Boolean): TimeLog?
+    fun findByOngoing(ongoing: Boolean): Set<TimeLog>
+    fun findByOngoingAndExpireTimeMsLessThan(ongoing: Boolean, currentTime: Long): Set<TimeLog>
 }
 

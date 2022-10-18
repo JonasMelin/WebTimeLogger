@@ -8,6 +8,7 @@ import com.jonas.webtime.repository.ActivityRepo
 import com.jonas.webtime.repository.ProjectRepo
 import com.jonas.webtime.repository.TimeLogRepo
 import com.jonas.webtime.repository.UserRepo
+import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 
 @Service
@@ -56,6 +57,11 @@ class ServiceClass (
         return this.projectDb.findByUser(this.getUser(firstName, lastName, token))
     }
 
+    fun getActivities(firstName: String, lastName: String, token: String): Set<Activity> {
+
+        return this.activityDb.findByUser(this.getUser(firstName, lastName, token))
+    }
+
     private fun getUser(firstName: String, lastName: String, token: String): User {
         val user = this.userDb.findByFirstNameAndLastNameAndToken(firstName, lastName, token)
 
@@ -86,8 +92,6 @@ class ServiceClass (
         return project
     }
 
-
-
     private fun stopOngoingRecording(user: User) {
         while(true) { // ToDo: Get a Set instead. But, should never happen as only one can be active...
             val ongoingTimeLog = this.timeLogRepo.findFirstByUserAndOngoing(user, true)
@@ -113,23 +117,12 @@ class ServiceClass (
         this.timeLogRepo.save(timelog)
     }
 
-    private fun getTimesForLog() {
+    @Scheduled(fixedDelay = 55 * 1000, initialDelay = 5 * 1000)
+    fun timerCallback() {
 
-    }
-
-    fun functionX() {
-        val myArray = mutableListOf<Int>();
-
-        myArray.add(7)
-
-        for(nextItem in myArray) {
-            println("Listitems: " + nextItem)
+        for(nextTimeLog in timeLogRepo.findByOngoingAndExpireTimeMsLessThan(true, System.currentTimeMillis())) {
+            println("Timer expired: (${nextTimeLog.user.firstName} ${nextTimeLog.user.lastName}/${nextTimeLog.activity.activityType}/${nextTimeLog.project.projectName})")
+            this.stopOngoingRecording(nextTimeLog)
         }
-
-        val myHash = mutableMapOf<String, Int>()
-        myHash.put("nisse", 7)
-
-        println("HashItems: " + myHash.get("nisse"))
-
     }
 }

@@ -39,7 +39,7 @@ class Controller (private val serviceClass: ServiceClass) {
     }
 
     @GetMapping("/api/v1/project")
-    fun getProject(@RequestBody userBaseDto: UserBaseDTO): ResponseEntity<GetProjectsDTO> {
+    fun getProjects(@RequestBody userBaseDto: UserBaseDTO): ResponseEntity<GetProjectsDTO> {
         try {
             val projects = this.serviceClass.getProjects(userBaseDto.firstName, userBaseDto.lastName, userBaseDto.token)
             val projectsDto = GetProjectsDTO()
@@ -63,6 +63,23 @@ class Controller (private val serviceClass: ServiceClass) {
             return ResponseEntity("", HttpStatus.OK)
         }catch (ex: Exception) {
             return ResponseEntity("Could not add activity: " + ex.message, HttpStatus.BAD_REQUEST)
+        }
+    }
+
+    @GetMapping("/api/v1/activity")
+    fun getActivities(@RequestBody userBaseDto: UserBaseDTO): ResponseEntity<GetActivitiesDTO> {
+        try {
+            val activities = this.serviceClass.getActivities(userBaseDto.firstName, userBaseDto.lastName, userBaseDto.token)
+            val activitiesDTO = GetActivitiesDTO()
+
+            for(nextActivity in activities) {
+                activitiesDTO.activityTypes!!.add(nextActivity.activityType)
+            }
+
+            return ResponseEntity(activitiesDTO, HttpStatus.OK)
+        }catch (ex: Exception) {
+            return ResponseEntity(GetActivitiesDTO(null, "Could not get activities: " + ex.message),
+                HttpStatus.BAD_REQUEST)
         }
     }
 
