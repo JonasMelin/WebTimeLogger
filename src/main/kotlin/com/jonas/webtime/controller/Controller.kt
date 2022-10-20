@@ -19,14 +19,36 @@ class Controller (private val serviceClass: ServiceClass) {
     }
 
     @PostMapping("/api/v1/user")
-    fun addUser(@RequestBody addUserDTO: AddUserDTO): ResponseEntity<AddUserReplyDTO> {
+    fun addUser(@RequestBody addUserDTO: AddUserDTO): ResponseEntity<UserReplyDTO> {
         try {
             return ResponseEntity(
-                AddUserReplyDTO(this.serviceClass.addUser(addUserDTO.firstName, addUserDTO.lastName, addUserDTO.email), "ok"),
+                UserReplyDTO(
+                    this.serviceClass.addUser(addUserDTO.firstName, addUserDTO.lastName, addUserDTO.email),
+                    addUserDTO.firstName,
+                    addUserDTO.lastName,
+                    "ok"),
                 HttpStatus.OK)
         }catch (ex: Exception) {
             return ResponseEntity(
-                AddUserReplyDTO(null, "Could not add user: " + ex.message),
+                UserReplyDTO(null, null, null, "Could not add user: " + ex.message),
+                HttpStatus.BAD_REQUEST)
+        }
+    }
+
+    @GetMapping("/api/v1/user")
+    fun getUser(@RequestBody userBaseDto: UserBaseDTO): ResponseEntity<UserReplyDTO> {
+        try {
+            val user = this.serviceClass.getUser(userBaseDto.token)
+            return ResponseEntity(
+                UserReplyDTO(
+                    user.token,
+                    user.firstName,
+                    user.lastName,
+                    "ok"),
+                HttpStatus.OK)
+        }catch (ex: Exception) {
+            return ResponseEntity(
+                UserReplyDTO(null, null, null, "Could not get user: " + ex.message),
                 HttpStatus.BAD_REQUEST)
         }
     }

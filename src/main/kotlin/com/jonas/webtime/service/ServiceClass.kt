@@ -65,7 +65,7 @@ class ServiceClass (
         return this.activityDb.findByUser(this.getUser(token))
     }
 
-    private fun getUser(token: String): User {
+    fun getUser(token: String): User {
         val user = this.userDb.findByToken(token)
 
         if (user == null) {
