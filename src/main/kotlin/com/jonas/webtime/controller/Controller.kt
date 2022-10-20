@@ -5,10 +5,7 @@ import com.jonas.webtime.service.ServiceClass
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.ui.Model
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 @RestController
 class Controller (private val serviceClass: ServiceClass) {
@@ -35,10 +32,10 @@ class Controller (private val serviceClass: ServiceClass) {
         }
     }
 
-    @GetMapping("/api/v1/user")
-    fun getUser(@RequestBody userBaseDto: UserBaseDTO): ResponseEntity<UserReplyDTO> {
+    @GetMapping("/api/v1/user/{token}")
+    fun getUser(@PathVariable(value="token") token: String): ResponseEntity<UserReplyDTO> {
         try {
-            val user = this.serviceClass.getUser(userBaseDto.token)
+            val user = this.serviceClass.getUser(token)
             return ResponseEntity(
                 UserReplyDTO(
                     user.token,
@@ -63,10 +60,10 @@ class Controller (private val serviceClass: ServiceClass) {
         }
     }
 
-    @GetMapping("/api/v1/project")
-    fun getProjects(@RequestBody userBaseDto: UserBaseDTO): ResponseEntity<GetProjectsDTO> {
+    @GetMapping("/api/v1/project/{token}")
+    fun getProjects(@PathVariable(value="token") token: String): ResponseEntity<GetProjectsDTO> {
         try {
-            val projects = this.serviceClass.getProjects(userBaseDto.token)
+            val projects = this.serviceClass.getProjects(token)
             val projectsDto = GetProjectsDTO()
 
             for(nextProj in projects) {
@@ -90,10 +87,10 @@ class Controller (private val serviceClass: ServiceClass) {
         }
     }
 
-    @GetMapping("/api/v1/activity")
-    fun getActivities(@RequestBody userBaseDto: UserBaseDTO): ResponseEntity<GetActivitiesDTO> {
+    @GetMapping("/api/v1/activity/{token}")
+    fun getActivities(@PathVariable(value="token") token: String): ResponseEntity<GetActivitiesDTO> {
         try {
-            val activities = this.serviceClass.getActivities(userBaseDto.token)
+            val activities = this.serviceClass.getActivities(token)
             val activitiesDTO = GetActivitiesDTO()
 
             for(nextActivity in activities) {
