@@ -1,13 +1,12 @@
 package com.jonas.webtime.Models.DTO
 
-class AddProjectDTO(firstName: String, lastName: String, token: String, var projectName: String) :
-    UserBaseDTO(firstName, lastName, token) {
+class AddProjectDTO(token: String, var projectName: String): UserBaseDTO(token) {
 
     init {
         projectName = projectName.trim().lowercase()
 
-        if (projectName.length < MIN_LEN) {
-            throw Exception("projectName must be at least $MIN_LEN characters")
+        if (projectName.length < MIN_NAME_LEN) {
+            throw Exception("projectName must be at least $MIN_NAME_LEN characters")
         }
     }
 }

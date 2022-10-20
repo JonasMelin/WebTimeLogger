@@ -10,6 +10,7 @@ import com.jonas.webtime.repository.TimeLogRepo
 import com.jonas.webtime.repository.UserRepo
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
+import java.util.*
 
 @Service
 class ServiceClass (
@@ -19,22 +20,24 @@ class ServiceClass (
     private val timeLogRepo: TimeLogRepo
     ){
 
-    fun addUser(firstName: String, lastName: String, token: String) {
-        this.userDb.save(User(firstName, lastName, token))
+    fun addUser(firstName: String, lastName: String, email: String): String {
+
+        val uuid = UUID.randomUUID().toString()
+        this.userDb.save(User(firstName, lastName, email, uuid))
+        return uuid
     }
 
-    fun addActivity(firstName: String, lastName: String, token: String, activityType: String) {
-        this.activityDb.save(Activity(activityType, this.getUser(firstName, lastName, token)))
+    fun addActivity(token: String, activityType: String) {
+        this.activityDb.save(Activity(activityType, this.getUser(token)))
     }
 
-    fun addProject(firstName: String, lastName: String, token: String, projectName: String) {
-        this.projectDb.save(Project(projectName, this.getUser(firstName, lastName, token)))
+    fun addProject(token: String, projectName: String) {
+        this.projectDb.save(Project(projectName, this.getUser(token)))
     }
 
-    fun uppdateLogging(firstName: String, lastName: String, token: String,
-                       projectName: String, activityType: String, timeoutMinutes: Long) {
+    fun uppdateLogging(token: String, projectName: String, activityType: String, timeoutMinutes: Long) {
 
-        val user = this.getUser(firstName, lastName, token)
+        val user = this.getUser(token)
         val activity = this.getActivity(activityType, user)
         val project = this.getProject(projectName, user)
 
@@ -52,21 +55,21 @@ class ServiceClass (
                 project))
     }
 
-    fun getProjects(firstName: String, lastName: String, token: String): Set<Project> {
+    fun getProjects(token: String): Set<Project> {
 
-        return this.projectDb.findByUser(this.getUser(firstName, lastName, token))
+        return this.projectDb.findByUser(this.getUser(token))
     }
 
-    fun getActivities(firstName: String, lastName: String, token: String): Set<Activity> {
+    fun getActivities(token: String): Set<Activity> {
 
-        return this.activityDb.findByUser(this.getUser(firstName, lastName, token))
+        return this.activityDb.findByUser(this.getUser(token))
     }
 
-    private fun getUser(firstName: String, lastName: String, token: String): User {
-        val user = this.userDb.findByFirstNameAndLastNameAndToken(firstName, lastName, token)
+    private fun getUser(token: String): User {
+        val user = this.userDb.findByToken(token)
 
         if (user == null) {
-            throw RuntimeException("User not found ($firstName $lastName / $token)...")
+            throw RuntimeException("User with token $token not found ...")
         }
 
         return user

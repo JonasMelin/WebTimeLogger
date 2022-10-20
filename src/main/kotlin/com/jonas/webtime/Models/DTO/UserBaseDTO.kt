@@ -1,16 +1,15 @@
 package com.jonas.webtime.Models.DTO
 
-open class UserBaseDTO(var firstName: String, var lastName: String, var token: String) {
+open class UserBaseDTO(var token: String) {
 
-    val MIN_LEN = 2
+    val MIN_TOKEN_LEN = 32
+    val MIN_NAME_LEN = 2
 
     init {
-        firstName = firstName.trim().lowercase()
-        lastName = lastName.trim().lowercase()
-        token = token.trim()
+        token = token.trim().lowercase()
 
-        if (firstName.length < MIN_LEN || lastName.length < MIN_LEN || token.length < MIN_LEN) {
-            throw Exception("names must be at least $MIN_LEN characters")
+        if (token.length < MIN_TOKEN_LEN) {
+            throw Exception("token must be at least $MIN_TOKEN_LEN characters")
         }
     }
 }

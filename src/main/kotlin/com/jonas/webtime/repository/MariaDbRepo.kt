@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface UserRepo : JpaRepository<User?, Long?> {
-    fun findByFirstNameAndLastNameAndToken(first_name: String, last_name: String, token: String): User?
+    fun findByToken(token: String): User?
 }
 
 @Repository

@@ -19,19 +19,22 @@ class Controller (private val serviceClass: ServiceClass) {
     }
 
     @PostMapping("/api/v1/user")
-    fun addUser(@RequestBody userBaseDto: UserBaseDTO): ResponseEntity<String> {
+    fun addUser(@RequestBody addUserDTO: AddUserDTO): ResponseEntity<AddUserReplyDTO> {
         try {
-            this.serviceClass.addUser(userBaseDto.firstName, userBaseDto.lastName, userBaseDto.token)
-            return ResponseEntity("", HttpStatus.OK)
+            return ResponseEntity(
+                AddUserReplyDTO(this.serviceClass.addUser(addUserDTO.firstName, addUserDTO.lastName, addUserDTO.email), "ok"),
+                HttpStatus.OK)
         }catch (ex: Exception) {
-            return ResponseEntity("Could not add user: " + ex.message, HttpStatus.BAD_REQUEST)
+            return ResponseEntity(
+                AddUserReplyDTO(null, "Could not add user: " + ex.message),
+                HttpStatus.BAD_REQUEST)
         }
     }
 
     @PostMapping("/api/v1/project")
     fun addProject(@RequestBody projectDto: AddProjectDTO): ResponseEntity<String> {
         try {
-            this.serviceClass.addProject(projectDto.firstName, projectDto.lastName, projectDto.token, projectDto.projectName)
+            this.serviceClass.addProject(projectDto.token, projectDto.projectName)
             return ResponseEntity("", HttpStatus.OK)
         }catch (ex: Exception) {
             return ResponseEntity("Could not add project: " + ex.message, HttpStatus.BAD_REQUEST)
@@ -41,7 +44,7 @@ class Controller (private val serviceClass: ServiceClass) {
     @GetMapping("/api/v1/project")
     fun getProjects(@RequestBody userBaseDto: UserBaseDTO): ResponseEntity<GetProjectsDTO> {
         try {
-            val projects = this.serviceClass.getProjects(userBaseDto.firstName, userBaseDto.lastName, userBaseDto.token)
+            val projects = this.serviceClass.getProjects(userBaseDto.token)
             val projectsDto = GetProjectsDTO()
 
             for(nextProj in projects) {
@@ -58,8 +61,7 @@ class Controller (private val serviceClass: ServiceClass) {
     @PostMapping("/api/v1/activity")
     fun addActivity(@RequestBody activityDTO: AddActivityDTO): ResponseEntity<String> {
         try {
-            this.serviceClass.addActivity(activityDTO.firstName, activityDTO.lastName,
-                activityDTO.token, activityDTO.activityType)
+            this.serviceClass.addActivity(activityDTO.token, activityDTO.activityType)
             return ResponseEntity("", HttpStatus.OK)
         }catch (ex: Exception) {
             return ResponseEntity("Could not add activity: " + ex.message, HttpStatus.BAD_REQUEST)
@@ -69,7 +71,7 @@ class Controller (private val serviceClass: ServiceClass) {
     @GetMapping("/api/v1/activity")
     fun getActivities(@RequestBody userBaseDto: UserBaseDTO): ResponseEntity<GetActivitiesDTO> {
         try {
-            val activities = this.serviceClass.getActivities(userBaseDto.firstName, userBaseDto.lastName, userBaseDto.token)
+            val activities = this.serviceClass.getActivities(userBaseDto.token)
             val activitiesDTO = GetActivitiesDTO()
 
             for(nextActivity in activities) {
@@ -86,9 +88,8 @@ class Controller (private val serviceClass: ServiceClass) {
     @PostMapping("/api/v1/logging")
     fun updateLogging(@RequestBody updateLoggingDTO: UpdateLoggingDTO): ResponseEntity<String> {
         try {
-            this.serviceClass.uppdateLogging(updateLoggingDTO.firstName, updateLoggingDTO.lastName,
-                updateLoggingDTO.token, updateLoggingDTO.projectName, updateLoggingDTO.activityType,
-                updateLoggingDTO.timeoutMin)
+            this.serviceClass.uppdateLogging(updateLoggingDTO.token, updateLoggingDTO.projectName,
+                updateLoggingDTO.activityType, updateLoggingDTO.timeoutMin)
             return ResponseEntity("", HttpStatus.OK)
         }catch (ex: Exception) {
             return ResponseEntity("Could not update logging: " + ex.message, HttpStatus.BAD_REQUEST)

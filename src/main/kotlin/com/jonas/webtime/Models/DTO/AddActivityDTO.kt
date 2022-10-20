@@ -1,13 +1,12 @@
 package com.jonas.webtime.Models.DTO
 
-class AddActivityDTO(firstName: String, lastName: String, token: String, var activityType: String):
-    UserBaseDTO(firstName, lastName, token) {
+class AddActivityDTO(token: String, var activityType: String): UserBaseDTO(token) {
 
     init {
         activityType = activityType.trim().lowercase()
 
-        if (activityType.length < MIN_LEN) {
-            throw Exception("activityType must be at least $MIN_LEN characters")
+        if (activityType.length < MIN_NAME_LEN) {
+            throw Exception("activityType must be at least $MIN_TOKEN_LEN characters")
         }
     }
 }
