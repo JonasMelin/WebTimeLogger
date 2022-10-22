@@ -1,1 +1,1 @@
-docker build . -t webtimelogger
+time docker build . -t webtimelogger
