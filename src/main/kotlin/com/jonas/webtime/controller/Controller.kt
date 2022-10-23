@@ -46,17 +46,17 @@ class Controller (private val serviceClass: ServiceClass) {
         }catch (ex: Exception) {
             return ResponseEntity(
                 UserReplyDTO(null, null, null, "Could not get user: " + ex.message),
-                HttpStatus.BAD_REQUEST)
+                HttpStatus.UNAUTHORIZED)
         }
     }
 
     @PostMapping("/api/v1/project")
-    fun addProject(@RequestBody projectDto: AddProjectDTO): ResponseEntity<String> {
+    fun addProject(@RequestBody projectDto: AddProjectDTO): ResponseEntity<BaseReplyDTO> {
         try {
             this.serviceClass.addProject(projectDto.token, projectDto.projectName)
-            return ResponseEntity("", HttpStatus.OK)
+            return ResponseEntity(BaseReplyDTO(), HttpStatus.OK)
         }catch (ex: Exception) {
-            return ResponseEntity("Could not add project: " + ex.message, HttpStatus.BAD_REQUEST)
+            return ResponseEntity(BaseReplyDTO("Could not add project: " + ex.message), HttpStatus.BAD_REQUEST)
         }
     }
 
@@ -78,12 +78,12 @@ class Controller (private val serviceClass: ServiceClass) {
     }
 
     @PostMapping("/api/v1/activity")
-    fun addActivity(@RequestBody activityDTO: AddActivityDTO): ResponseEntity<String> {
+    fun addActivity(@RequestBody activityDTO: AddActivityDTO): ResponseEntity<BaseReplyDTO> {
         try {
             this.serviceClass.addActivity(activityDTO.token, activityDTO.activityType)
-            return ResponseEntity("", HttpStatus.OK)
+            return ResponseEntity(BaseReplyDTO(), HttpStatus.OK)
         }catch (ex: Exception) {
-            return ResponseEntity("Could not add activity: " + ex.message, HttpStatus.BAD_REQUEST)
+            return ResponseEntity(BaseReplyDTO("Could not add activity: " + ex.message), HttpStatus.BAD_REQUEST)
         }
     }
 
@@ -105,13 +105,13 @@ class Controller (private val serviceClass: ServiceClass) {
     }
 
     @PostMapping("/api/v1/logging")
-    fun updateLogging(@RequestBody updateLoggingDTO: UpdateLoggingDTO): ResponseEntity<String> {
+    fun updateLogging(@RequestBody updateLoggingDTO: UpdateLoggingDTO): ResponseEntity<BaseReplyDTO> {
         try {
             this.serviceClass.uppdateLogging(updateLoggingDTO.token, updateLoggingDTO.projectName,
                 updateLoggingDTO.activityType, updateLoggingDTO.timeoutMin)
-            return ResponseEntity("", HttpStatus.OK)
+            return ResponseEntity(BaseReplyDTO(), HttpStatus.OK)
         }catch (ex: Exception) {
-            return ResponseEntity("Could not update logging: " + ex.message, HttpStatus.BAD_REQUEST)
+            return ResponseEntity(BaseReplyDTO("Could not update logging: " + ex.message), HttpStatus.BAD_REQUEST)
         }
     }
 }
