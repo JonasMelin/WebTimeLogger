@@ -115,7 +115,17 @@ class Controller (private val serviceClass: ServiceClass) {
         }
     }
 
-    @GetMapping("/api/v1/lastlog/{token}")
+    @PutMapping("/api/v1/logging/stop/{token}")
+    fun stopLogging(@PathVariable(value="token") token: String): ResponseEntity<BaseReplyDTO> {
+        try {
+            this.serviceClass.stopOngoingRecording(token)
+            return ResponseEntity(BaseReplyDTO(), HttpStatus.OK)
+        }catch (ex: Exception) {
+            return ResponseEntity(BaseReplyDTO("Could not stop logging: " + ex.message), HttpStatus.BAD_REQUEST)
+        }
+    }
+
+    @GetMapping("/api/v1/logging/lastlog/{token}")
     fun getLastLog(@PathVariable(value="token") token: String): ResponseEntity<GetLastLogDTO> {
         try {
             return ResponseEntity(GetLastLogDTO(this.serviceClass.getLastLog(token)), HttpStatus.OK)

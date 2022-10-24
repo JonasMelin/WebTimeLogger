@@ -99,6 +99,10 @@ class ServiceClass (
         return project
     }
 
+    fun stopOngoingRecording(token: String) {
+        this.stopOngoingRecording(this.getUser(token))
+    }
+
     private fun stopOngoingRecording(user: User) {
         while(true) { // ToDo: Get a Set instead. But, should never happen as only one can be active...
             val ongoingTimeLog = this.timeLogRepo.findFirstByUserAndOngoing(user, true)
