@@ -65,6 +65,10 @@ class ServiceClass (
         return this.activityDb.findByUser(this.getUser(token))
     }
 
+    fun getLastLog(token: String): TimeLog {
+        return this.timeLogRepo.findFirstByUserOrderByIdDesc(this.getUser(token))
+    }
+
     fun getUser(token: String): User {
         val user = this.userDb.findByToken(token)
 

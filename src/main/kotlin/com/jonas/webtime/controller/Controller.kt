@@ -114,4 +114,13 @@ class Controller (private val serviceClass: ServiceClass) {
             return ResponseEntity(BaseReplyDTO("Could not update logging: " + ex.message), HttpStatus.BAD_REQUEST)
         }
     }
+
+    @GetMapping("/api/v1/lastlog/{token}")
+    fun getLastLog(@PathVariable(value="token") token: String): ResponseEntity<GetLastLogDTO> {
+        try {
+            return ResponseEntity(GetLastLogDTO(this.serviceClass.getLastLog(token)), HttpStatus.OK)
+        }catch (ex: Exception) {
+            return ResponseEntity(GetLastLogDTO("Could not get activities: " + ex.message), HttpStatus.BAD_REQUEST)
+        }
+    }
 }

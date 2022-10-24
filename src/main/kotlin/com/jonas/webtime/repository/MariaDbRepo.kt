@@ -29,5 +29,6 @@ interface TimeLogRepo : JpaRepository<TimeLog?, Long?> {
     fun findFirstByUserAndOngoing(user: User, ongoing: Boolean): TimeLog?
     fun findByOngoing(ongoing: Boolean): Set<TimeLog>
     fun findByOngoingAndExpireTimeMsLessThan(ongoing: Boolean, currentTime: Long): Set<TimeLog>
+    fun findFirstByUserOrderByIdDesc(user: User): TimeLog
 }
 
